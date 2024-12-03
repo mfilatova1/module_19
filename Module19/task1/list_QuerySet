@@ -1,0 +1,22 @@
+python manage.py shell
+from task1.models import Buyer, Game
+Buyer.objects.create(name='Ilya', balance='1500.05', age='24')
+Buyer.objects.create(name='Terminator2000', balance='0.5', age='52')
+Buyer.objects.create(name='Ubivator432', balance='42.15', age='16')
+Game.objects.create(title='Cyberpunk 2077', cost='31', size='46.2', description='Game of the year', age_limited='1')
+Game.objects.create(title='Mario', cost='5', size='0.5', description='Old game', age_limited='0')
+Game.objects.create(title='Hitman', cost='12', size='36.6', description='Who kills Mark?', age_limited='1')
+first_game = Game.objects.get(id=1)
+second_game = Game.objects.get(id=2)
+third_game = Game.objects.get(id=3)
+first_buyer = Buyer.objects.get(id=1)
+second_buyer = Buyer.objects.get(id=2)
+third_buyer = Buyer.objects.get(id=3)
+fourth_buyer = Buyer.objects.get(id=4)
+first_game.buyer.set((first_buyer,))
+second_game.buyer.set((first_buyer,))
+third_game.buyer.set((first_buyer,))
+second_game.buyer.set((fourth_buyer,))
+second_game.buyer.set((second_buyer, third_buyer))
+
+

@@ -44,15 +44,16 @@ def sign_up_by_html(request):
 
         # Обработка данных:
 
-        if password == repeat_password and int(age) >= 18 and username not in buyers:
-            Buyer.objects.create(name=username, balance=2000.0, age=age)
-            return HttpResponse(f"Приветствуем, {username}!")
-        elif password != repeat_password:
+        if password != repeat_password:
             info['error'] = 'Пароли не совпадают'
         elif int(age) < 18:
             info['error'] = 'Вы должны быть старше 18'
-        elif username in buyers:
+        elif Buyer.objects.filter(name=username).exists():
             info['error'] = 'Пользователь уже существует'
+        else:
+            Buyer.objects.create(name=username, balance=2000.0, age=age)
+            return HttpResponse(f"Приветствуем, {username}!")
+
 
     return render(request, "fourth_task/registration_page.html", info)
 
@@ -92,3 +93,4 @@ def sign_up_by_django(request):
         }
 
     return render(request, "fourth_task/registration_page.html", info)
+

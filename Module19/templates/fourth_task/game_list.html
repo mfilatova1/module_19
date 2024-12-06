@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru"> <!-- Указываем язык документа как русский -->
+<head>
+    <meta charset="UTF-8"> <!-- Устанавливаем кодировку символов как UTF-8 -->
+    <title>My site</title> <!-- Заголовок страницы -->
+</head>
+<body>
+<!-- Список игр -->
+<ul>
+    {% for game in page_obj %} <!-- Начинаем цикл по объектам page_obj (списку игр) -->
+        <li>
+            {{ game.title }} | {{ game.description }} | Стоимость: {{ game.cost }} <button>Купить</button>
+        </li>
+    {% empty %} <!-- Если список игр пуст, показываем сообщение -->
+        <p>Нет игр</p>
+    {% endfor %} <!-- Завершаем цикл -->
+</ul>
+
+<!-- Показываем пагинатор -->
+<div class="pagination" style="font-size: 130%; text-align: center; word-spacing: 5px">
+    <p>Страницы:
+        {% if page_obj.has_previous %} <!-- Проверяем, есть ли предыдущая страница -->
+            <button><a href="?page=1"><<<</a></button> <!-- Кнопка для перехода на первую страницу -->
+            <button><a href="?page={{ page_obj.previous_page_number }}"><</a></button> <!-- Кнопка для перехода на предыдущую страницу -->
+        {% endif %}
+        
+        {% for page in num_page_list %} <!-- Начинаем цикл по списку страниц -->
+            {% if page == 0 %} <!-- Если элемент равен 0, выводим '...' -->
+                ...
+            {% elif page == page_obj.number %} <!-- Если это текущая страница, просто выводим номер страницы -->
+                {{ page }}
+            {% else %}
+                <button><a href="?page={{ page }}">{{ page }}</a></button> <!-- Кнопка для перехода на страницу с номером page -->
+            {% endif %}
+        {% endfor %} <!-- Завершаем цикл -->
+        
+        {% if page_obj.has_next %} <!-- Проверяем, есть ли следующая страница -->
+            <button><a href="?page={{ page_obj.next_page_number }}">></a></button> <!-- Кнопка для перехода на следующую страницу -->
+            <button><a href="?page={{ paginator.num_pages }}">>>></a></button> <!-- Кнопка для перехода на последнюю страницу -->
+        {% endif %}
+    </p>
+    
+    <p>
+        <form method="POST"> <!-- Начинаем форму с методом POST -->
+            {% csrf_token %} <!-- Добавляем токен CSRF для защиты от подделки запросов -->
+            <label for="select_page_len">Выберите количество игр на одной странице:</label> <!-- Заголовок выбора -->
+            <select name="page_len" id="select_page_len" style="font-size: inherit;"> <!-- Выпадающий список для выбора количества игр на странице -->
+                <option>1</option> <!-- Опция 1 игра -->
+                <option>3</option> <!-- Опция 3 игры -->
+                <option>5</option> <!-- Опция 5 игр -->
+                <option>all</option> <!-- Опция для отображения всех игр -->
+            </select>
+            <button type="submit">Применить</button> <!-- Кнопка для отправки формы -->
+        </form>
+    </p>
+</div>
+</body>
+</html>
